@@ -1,3 +1,4 @@
+
 # Projeto Harmônico
 
 > Uma plataforma de mentoria e desenvolvimento humano para reduzir a barreira de entrada de desenvolvedores juniores no mercado de trabalho.
@@ -118,10 +119,3 @@ docker compose logs -f
 ```
 
 O projeto estará disponível em `http://localhost:3000`. Para encerrar o container, execute `docker compose down`.
-
-## 🤝 Como Contribuir
-
-1. Faça um fork do repositório
-2. Crie uma branch para sua feature ou correção: `git checkout -b feat/nome-da-feature`
-3. Siga o padrão de **Conventional Commits** para suas mensagens.
-4. Abra um Pull Request descrevendo a mudança realizada.

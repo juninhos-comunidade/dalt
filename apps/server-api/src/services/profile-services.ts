@@ -1,5 +1,5 @@
 import { ProfileRepository } from "../repositories/profile-repository";
-import { Profile } from "../types";
+import { Profile } from "@dalt/shared-types";
 
 export function createProfileService(repo: ProfileRepository) {
     return async function createProfile(fullName: string, role: "novato" | "padrinho") {

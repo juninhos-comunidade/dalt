@@ -1,5 +1,5 @@
 import { randomUID } from "crypto";
-import { Profile } from "../types";
+import { Profile } from "@dalt/shared-types";
 import { ProfileRepository } from "./profile-repository";
 
 const db: Profile[] = [];

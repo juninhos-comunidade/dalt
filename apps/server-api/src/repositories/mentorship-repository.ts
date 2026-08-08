@@ -1,4 +1,4 @@
-import { MentorshipRequest, MentorshipStatus } from "..types";
+import { MentorshipRequest, MentorshipStatus } from "@dalt/shared-types";
 
 export interface MentorshipRepository {
     create(data: Omit<MentorshipRequest, "id" | "status" | "createdAt">): Promise<MentorshipRequest>;

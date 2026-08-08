@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { MentorshipRequest, MentorshipStatus } from "../types";
+import { MentorshipRequest, MentorshipStatus } from "@dalt/shared-types";
 import { MentorshipRepository } from "./mentorship-repository";
 
 const db: MentorshipRequest[] = [];

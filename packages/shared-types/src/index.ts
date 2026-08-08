@@ -12,7 +12,7 @@ export interface Profile {
 export interface MentorshipRequest {
     id: string;
     novatoId: string;
-    parinhoId: string;
+    padrinhoId: string;
     objetivo: string;
     status: MentorshipStatus;
     createdAt: Date;

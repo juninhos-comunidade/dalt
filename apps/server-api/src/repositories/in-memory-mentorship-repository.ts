@@ -4,7 +4,7 @@ import { MentorshipRepository } from "./mentorship-repository";
 
 const db: MentorshipRequest[] = [];
 
-export const inMemoryshipRepository: MentorshipRepository = {
+export const inMemoryMentorshipRepository: MentorshipRepository = {
     async create(data) {
         const request: MentorshipRequest = {
             ...data,
@@ -19,7 +19,7 @@ export const inMemoryshipRepository: MentorshipRepository = {
         return db.find((r) => r.id === id) ?? null;
     },
     async updateStatus (id, status) {
-        const request = db.fin((r) => r.id === id);
+        const request = db.find((r) => r.id === id);
         if (!request) throw new Error("Solicitação não encontrada");
         request.status = status;
         return request;

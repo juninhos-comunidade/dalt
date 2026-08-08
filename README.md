@@ -43,31 +43,47 @@ Repositórios com bugs propositais para o novato investigar, corrigir e enviar P
 
 ## 🛠️ Tecnologias
 
-O projeto é desenvolvido como um **monólito** estruturado em camadas de responsabilidade (Front e Back isolados), utilizando:
+O projeto é desenvolvido utilizando a arquitetura de **Monorepo** com `pnpm workspaces`, separando totalmente o Frontend e o Backend:
 
-- **[Next.js](https://nextjs.org/)** — Framework full-stack (App Router)
-- **[Supabase](https://supabase.com/)** — Banco de dados (PostgreSQL) e Autenticação (JWT via Cookies SSR), com comunicação restrita ao backend para maior segurança.
-- **[Resend](https://resend.com/)** — Plataforma para disparo de e-mails transacionais (convites de mentoria, alertas, etc).
-- **[Conventional Commits](https://www.conventionalcommits.org/pt-br/)** — Padronização das mensagens de commit
+- **Frontend (`apps/web`)**: [Next.js](https://nextjs.org/) (App Router) + Tailwind CSS.
+- **Backend (`apps/server-api`)**: Node.js puro com [Fastify](https://fastify.dev/) para roteamento HTTP.
+- **Tipagens (`packages/shared-types`)**: Pacote compartilhado garantindo consistência entre o front e o back.
+- **Infra e Execução**: [Docker](https://www.docker.com/) e [Supabase](https://supabase.com/).
 
-## 📁 Estrutura do Projeto
+## 📁 Estrutura do Projeto e Rotas
+
+Abaixo está o mapa atual da organização do **Monorepo** e como as rotas estão estruturadas no Next.js:
 
 ```
 harmonico/
-├── src/
-│   ├── app/          # Frontend: Rotas, Layouts e Server Components do Next.js
-│   ├── components/   # Frontend: Componentes visuais reutilizáveis (Botões, Modais)
-│   ├── server/       # Backend: O coração da aplicação
-│   │   ├── actions/  # Server Actions (a ponte de comunicação entre Front e Back)
-│   │   ├── services/ # Regras de negócio (ex: email.service.ts, user.service.ts)
-│   │   ├── config/   # Instâncias de clientes (Supabase Server Client, Resend)
-│   │   └── emails/   # Templates de e-mail feitos com React Email
-│   ├── lib/          # Utils genéricos e compartilhados (formatação de datas, zod schemas)
-│   └── styles/       # Estilos globais e Tailwind
-├── public/           # Arquivos estáticos
-├── .env.local        # Variáveis de ambiente
-└── README.md
-
+├── apps/
+│   ├── web/                    # Frontend (Next.js)
+│   │   ├── app/
+│   │   │   ├── (public)/       # 🟢 ROTAS PÚBLICAS (Acesso livre)
+│   │   │   │   ├── page.tsx    # -> / (Home)
+│   │   │   │   ├── sobre/      # -> /sobre
+│   │   │   │   └── projetos/   # -> /projetos
+│   │   │   │
+│   │   │   ├── (private)/      # 🔴 ROTAS PRIVADAS (Requer Login)
+│   │   │   │   ├── conta/      # -> /conta
+│   │   │   │   ├── configuracoes/# -> /configuracoes
+│   │   │   │   └── privacidade/# -> /privacidade
+│   │   │   │
+│   │   │   └── mural/          # 🟡 ROTA MISTA
+│   │   │       └── page.tsx    # -> /mural (Visualização pública, interação privada)
+│   │   │
+│   │   └── middleware.ts       # Valida cookies e protege rotas (private) redirecionando para a Home
+│   │
+│   └── server-api/             # Backend (Node.js + Fastify)
+│       └── src/
+│           ├── services/       # Regras de Negócio e Casos de Uso
+│           └── repositories/   # Acesso a Dados
+│
+├── packages/
+│   └── shared-types/           # Tipagens (Typescript) importadas pelo front e pelo back
+│
+├── pnpm-workspace.yaml         # Configuração do Monorepo
+└── docker-compose.yml          # Orquestração dos containers (harmonico-web e harmonico-api)
 ```
 
 ## ⚙️ Como Rodar Localmente
@@ -85,15 +101,14 @@ harmonico/
 git clone https://github.com/seu-usuario/harmonico.git
 cd harmonico
 
-# 2. Instale as dependências
-npm install
+# 2. Instale as dependências usando pnpm (obrigatório para o workspace)
+pnpm install
 
 # 3. Configure as variáveis de ambiente
 cp .env.example .env.local
-# Preencha com suas credenciais (Supabase, Resend, etc)
 
 # 4. Rode o projeto em ambiente de desenvolvimento
-npm run dev
+pnpm run dev
 ```
 
 O projeto estará disponível em `http://localhost:3000`.

@@ -13,12 +13,16 @@
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@hookform/resolvers": "^5.7.1",
     "@mui/icons-material": "^6.4.0",
     "@mui/material": "^6.4.0",
     "@mui/material-nextjs": "^6.4.0",
+    "framer-motion": "^11.18.2",
     "next": "16.2.11",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "react-hook-form": "^7.85.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^20",

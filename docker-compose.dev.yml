@@ -1,0 +1,26 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    environment:
+      - NODE_ENV=development
+      - CI=true
+    command: sh -c "pnpm install --no-frozen-lockfile && pnpm --filter @dalt/web run dev"
+
+  backend-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3001:3001"
+    volumes:
+      - .:/app
+    environment:
+      - NODE_ENV=development
+      - CI=true
+    command: sh -c "pnpm install --no-frozen-lockfile && pnpm --filter @dalt/api run dev"

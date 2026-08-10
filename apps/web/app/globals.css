@@ -1,0 +1,22 @@
+:root {
+  --font-family-base: var(--font-jetbrains), monospace;
+  --font-family-hero: var(--font-fira), monospace;
+}
+
+html, body {
+  padding: 0;
+  margin: 0;
+  background-color: #2D3540; /* Fundo base fallback */
+  color: #FFFFFF;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}

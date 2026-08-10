@@ -2,7 +2,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: apps/web/Dockerfile
     container_name: harmonico-web
     restart: always
     ports:
@@ -10,31 +10,20 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
-      # Adicione aqui as variáveis de ambiente necessárias para produção:
-      # - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
-      # - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - API_URL=http://backend-api:3001
     networks:
       - harmonico-net
 
-  # -----------------------------------------------------------------------------------------
-  # EXEMPLO DE SEPARAÇÃO FRONT / BACK EM CONTAINERS DIFERENTES:
-  # Caso você decida separar a camada de backend em um serviço/repositório dedicado 
-  # (ex: API em Express/NestJS, FastAPI ou microsserviço), basta adicionar outro serviço
-  # na mesma rede (harmonico-net) para que se comuniquem com latência mínima e segurança:
-  #
-  # backend-api:
-  #   build:
-  #     context: ./backend    # Caminho do serviço de backend isolado
-  #     dockerfile: Dockerfile
-  #   container_name: harmonico-api
-  #   restart: always
-  #   ports:
-  #     - "3001:3001"
-  #   environment:
-  #     - DATABASE_URL=${DATABASE_URL}
-  #   networks:
-  #     - harmonico-net
-  # -----------------------------------------------------------------------------------------
+  backend-api:
+    build:
+      context: .
+      dockerfile: apps/server-api/Dockerfile
+    container_name: harmonico-api
+    restart: always
+    ports:
+      - "3001:3001"
+    networks:
+      - harmonico-net
 
 networks:
   harmonico-net:

@@ -1,3 +1,61 @@
+Environment (.env)
+
+ - Copy `.env.example` to `.env` and edit values for your environment. Do NOT commit
+	 `.env` to source control — it may contain secrets.
+
+```bash
+cp .env.example .env
+# edit .env as needed
+```
+
+CI: running migrations in CI
+
+Below is an example GitHub Actions job that shows how to run Prisma migrations (or
+`db push`) in CI against a temporary Postgres service. Adapt to your pipeline as
+needed.
+
+```yaml
+name: Prisma Migrations
+
+on:
+	workflow_dispatch:
+
+jobs:
+	migrate:
+		runs-on: ubuntu-latest
+		services:
+			db:
+				image: postgres:15
+				env:
+					POSTGRES_USER: dalt
+					POSTGRES_PASSWORD: daltpass
+					POSTGRES_DB: dalt_db
+				ports:
+					- 5432:5432
+				options: >-
+					--health-cmd "pg_isready -U dalt" --health-interval 10s --health-timeout 5s --health-retries 5
+
+		steps:
+			- uses: actions/checkout@v4
+			- name: Setup Node
+				uses: actions/setup-node@v4
+				with:
+					node-version: 18
+			- name: Setup pnpm
+				uses: pnpm/action-setup@v2
+				with:
+					version: 8
+			- name: Install deps
+				run: |
+					cd apps/server-api
+					pnpm install
+			- name: Run Prisma DB push
+				env:
+					DATABASE_URL: postgresql://dalt:daltpass@localhost:5432/dalt_db?schema=public
+				run: |
+					cd apps/server-api
+					pnpm prisma:dbpush
+```
 # Database & Prisma
 
 This document explains how to run the Postgres DB for local development and apply Prisma migrations and seeds.

@@ -32,6 +32,7 @@ const loginSchema = z.object({
 const registerSchema = loginSchema.extend({
   name: z.string().min(3, 'O nome deve ter pelo menos 3 caracteres'),
   age: z.coerce.number().min(14, 'A idade mínima é 14 anos').max(100, 'Idade inválida'),
+  role: z.enum(['APRENDIZ', 'MENTOR']).default('APRENDIZ'),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -52,8 +53,41 @@ export default function AuthForm({ isMobile = false, onClose }: AuthFormProps) {
   });
 
   const onSubmit = (data: RegisterFormData | LoginFormData) => {
-    console.log(`Submitting ${mode}:`, data);
-    // Add real authentication logic here
+    if (mode === 'login') {
+      // call login
+      fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+        .then((r) => r.json())
+        .then((json) => {
+          if (json.success && json.data) {
+            // store tokens
+            localStorage.setItem('accessToken', json.data.accessToken);
+            localStorage.setItem('refreshToken', json.data.refreshToken);
+            router.push('/');
+          } else {
+            alert(json.error || 'Erro ao logar');
+          }
+        });
+    } else {
+      // register
+      fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+        .then((r) => r.json())
+        .then((json) => {
+          if (json.success) {
+            alert('Cadastro realizado, faça login');
+            switchMode('login');
+          } else {
+            alert(json.error || 'Erro ao cadastrar');
+          }
+        });
+    }
   };
 
   const handleTogglePasswordVisibility = () => {
@@ -144,6 +178,10 @@ export default function AuthForm({ isMobile = false, onClose }: AuthFormProps) {
               error={!!errors.age}
               helperText={errors.age?.message}
             />
+            <TextField select label="Tipo" defaultValue="APRENDIZ" {...register('role')} SelectProps={{ native: true }}>
+              <option value="APRENDIZ">Aprendiz</option>
+              <option value="MENTOR">Mentor</option>
+            </TextField>
           </>
         )}
 

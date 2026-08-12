@@ -14,7 +14,7 @@ import { PrismaClient } from "@prisma/client";
       url: "/auth/register",
       payload: { email: testEmail, password: "password123" },
     });
-    console.log("register status", registerRes.statusCode, registerRes.payload);
+    console.log("register status", registerRes.statusCode);
     if (registerRes.statusCode !== 201) throw new Error("register failed");
 
     const dup = await app.inject({
@@ -30,7 +30,7 @@ import { PrismaClient } from "@prisma/client";
       url: "/auth/login",
       payload: { email: testEmail, password: "password123" },
     });
-    console.log("login status", login.statusCode, login.payload);
+    console.log("login status", login.statusCode);
     if (login.statusCode !== 200) throw new Error("login failed");
 
     // parse token
@@ -51,11 +51,7 @@ import { PrismaClient } from "@prisma/client";
       url: "/protected",
       headers: { authorization: `Bearer ${accessToken}` },
     });
-    console.log(
-      "protected with token status",
-      withToken.statusCode,
-      withToken.payload,
-    );
+    console.log("protected with token status", withToken.statusCode);
     if (withToken.statusCode !== 200)
       throw new Error("protected route failed with token");
 
@@ -65,7 +61,7 @@ import { PrismaClient } from "@prisma/client";
       url: "/auth/refresh",
       payload: { refreshToken },
     });
-    console.log("refresh status", refreshResp.statusCode, refreshResp.payload);
+    console.log("refresh status", refreshResp.statusCode);
     if (refreshResp.statusCode !== 200) throw new Error("refresh failed");
 
     const refreshJson = JSON.parse(refreshResp.payload);

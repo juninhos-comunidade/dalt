@@ -57,9 +57,9 @@
   - [x] token inválido/expirado é rejeitado
   - [x] rotas protegidas aceitam token e rejeitam requests sem token
 - [ ] Revisão:
- - [x] Revisão:
-  - [x] revisar política de expiração e refresh se necessário
-  - [x] checar logs de autenticação para dados sensíveis
+- [x] Revisão:
+- [x] revisar política de expiração e refresh se necessário
+- [x] checar logs de autenticação para dados sensíveis
 
 ### 3 — Roles e autorização por papel
 

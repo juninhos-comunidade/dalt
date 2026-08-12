@@ -56,7 +56,10 @@ export function createAuthService(prisma: PrismaClient) {
 
       // create refresh token (opaque) stored in DB as a hashed value
       const refreshTokenValue = crypto.randomBytes(48).toString("hex");
-      const hashed = crypto.createHash("sha256").update(refreshTokenValue).digest("hex");
+      const hashed = crypto
+        .createHash("sha256")
+        .update(refreshTokenValue)
+        .digest("hex");
       const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
       await prisma.refreshToken.create({
         data: {
@@ -71,8 +74,13 @@ export function createAuthService(prisma: PrismaClient) {
 
     async refresh(oldToken: string) {
       // incoming oldToken is the raw token; compare against stored hash
-      const oldHashed = crypto.createHash("sha256").update(oldToken).digest("hex");
-      const record = await prisma.refreshToken.findUnique({ where: { token: oldHashed } });
+      const oldHashed = crypto
+        .createHash("sha256")
+        .update(oldToken)
+        .digest("hex");
+      const record = await prisma.refreshToken.findUnique({
+        where: { token: oldHashed },
+      });
       if (!record || record.revoked) throw new Error("INVALID_REFRESH_TOKEN");
       if (record.expiresAt.getTime() < Date.now())
         throw new Error("EXPIRED_REFRESH_TOKEN");
@@ -98,16 +106,24 @@ export function createAuthService(prisma: PrismaClient) {
       );
 
       const newRefreshTokenValue = crypto.randomBytes(48).toString("hex");
-      const newHashed = crypto.createHash("sha256").update(newRefreshTokenValue).digest("hex");
+      const newHashed = crypto
+        .createHash("sha256")
+        .update(newRefreshTokenValue)
+        .digest("hex");
       const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
-      await prisma.refreshToken.create({ data: { token: newHashed, userId: user.id, expiresAt } });
+      await prisma.refreshToken.create({
+        data: { token: newHashed, userId: user.id, expiresAt },
+      });
 
       return { accessToken, refreshToken: newRefreshTokenValue };
     },
 
     async revokeRefresh(token: string) {
       const hashed = crypto.createHash("sha256").update(token).digest("hex");
-      await prisma.refreshToken.updateMany({ where: { token: hashed }, data: { revoked: true } });
+      await prisma.refreshToken.updateMany({
+        where: { token: hashed },
+        data: { revoked: true },
+      });
     },
   };
 }

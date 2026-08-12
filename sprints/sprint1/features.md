@@ -8,6 +8,7 @@
   1. A implementação estiver feita e funcionando.
   2. Os testes cobrirem todos os cenários listados e passarem.
   3. Um review de código for realizado e aprovado.
+  4. O `README.md` foi atualizado se as mudanças alterarem execução, configuração ou instruções de desenvolvimento.
 
 ## Passo a passo (sequencial)
 

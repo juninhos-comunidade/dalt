@@ -15,6 +15,10 @@ O diferencial da plataforma está em unir três pilares num único ecossistema:
 
 O motor que sustenta tudo isso é o **senso de comunidade** e a cultura de ***pay it forward***: quem é ajudado hoje, ajuda amanhã.
 
+## 📚 Documentation
+
+- Keep this `README.md` up-to-date: any change that affects setup, running, environment variables, Docker configuration, or developer workflow must be reflected here. This ensures developers and CI maintainers can reproduce and run the project reliably.
+
 ## ✨ Principais Funcionalidades
 
 ### 🤝 Sistema de Apadrinhamento (Mentoria)

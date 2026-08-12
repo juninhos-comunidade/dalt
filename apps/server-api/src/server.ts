@@ -5,6 +5,7 @@ import { createProfileService } from "./services/profile-services";
 import { inMemoryProfileRepository } from "./repositories/in-memory-profile-repository";
 import authRoutes from "./routes/auth-routes";
 import protectedRoutes from "./routes/protected-routes";
+import roleRoutes from "./routes/role-routes";
 
 export function buildServer(opts = { logger: true }) {
   const app = fastify(opts as any);
@@ -62,6 +63,9 @@ export function buildServer(opts = { logger: true }) {
 
   // protected test route
   app.register(protectedRoutes, { prefix: "/protected" });
+
+  // role-based test routes
+  app.register(roleRoutes, { prefix: "/role" });
 
   return app;
 }

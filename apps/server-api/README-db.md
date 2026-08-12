@@ -1,7 +1,7 @@
 Environment (.env)
 
- - Copy `.env.example` to `.env` and edit values for your environment. Do NOT commit
-	 `.env` to source control — it may contain secrets.
+- Copy `.env.example` to `.env` and edit values for your environment. Do NOT commit
+  `.env` to source control — it may contain secrets.
 
 ```bash
 cp .env.example .env
@@ -56,6 +56,7 @@ jobs:
 					cd apps/server-api
 					pnpm prisma:dbpush
 ```
+
 # Database & Prisma
 
 This document explains how to run the Postgres DB for local development and apply Prisma migrations and seeds.

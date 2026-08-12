@@ -64,8 +64,8 @@ export function buildServer(opts = { logger: true }) {
   // protected test route
   app.register(protectedRoutes, { prefix: "/protected" });
 
-  // role-based test routes
-  app.register(roleRoutes, { prefix: "/role" });
+  // role test routes
+  app.register(roleRoutes, { prefix: "/content" });
 
   return app;
 }

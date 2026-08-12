@@ -1,26 +1,26 @@
 import { FastifyPluginAsync } from "fastify";
-import { requireRole } from "../plugins/role-guard";
+import authenticate from "../plugins/jwt-middleware";
+import { authorize } from "../plugins/role-guard";
 
-const roleRoutes: FastifyPluginAsync = async (app) => {
-  // Endpoint to create content - only MENTOR or MASTER
-  app.post(
+const plugin: FastifyPluginAsync = async (fastify, opts) => {
+  // content creation: MENTOR or MASTER
+  fastify.post(
     "/create",
-    { preHandler: requireRole(["MENTOR", "MASTER"]) },
+    { preHandler: [authenticate as any, authorize(["MENTOR", "MASTER"]) as any] },
     async (request, reply) => {
-      const { title } = request.body as any;
-      return reply.send({ success: true, data: { title, createdBy: (request as any).user.id } });
+      // minimal create simulation
+      return reply.status(201).send({ success: true });
     },
   );
 
-  // Endpoint to approve content - only MASTER
-  app.post(
+  // approval: only MASTER
+  fastify.post(
     "/approve",
-    { preHandler: requireRole("MASTER") },
+    { preHandler: [authenticate as any, authorize(["MASTER"]) as any] },
     async (request, reply) => {
-      const { contentId } = request.body as any;
-      return reply.send({ success: true, data: { contentId, approvedBy: (request as any).user.id } });
+      return reply.status(200).send({ success: true });
     },
   );
 };
 
-export default roleRoutes;
+export default plugin;

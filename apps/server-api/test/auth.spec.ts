@@ -9,9 +9,21 @@ beforeAll(async () => {
   prisma = new PrismaClient();
   app = buildServer({ logger: false }) as any;
   // ensure roles exist
-  await prisma.role.upsert({ where: { name: "MASTER" }, update: {}, create: { name: "MASTER" } });
-  await prisma.role.upsert({ where: { name: "MENTOR" }, update: {}, create: { name: "MENTOR" } });
-  await prisma.role.upsert({ where: { name: "APRENDIZ" }, update: {}, create: { name: "APRENDIZ" } });
+  await prisma.role.upsert({
+    where: { name: "MASTER" },
+    update: {},
+    create: { name: "MASTER" },
+  });
+  await prisma.role.upsert({
+    where: { name: "MENTOR" },
+    update: {},
+    create: { name: "MENTOR" },
+  });
+  await prisma.role.upsert({
+    where: { name: "APRENDIZ" },
+    update: {},
+    create: { name: "APRENDIZ" },
+  });
 });
 
 afterAll(async () => {

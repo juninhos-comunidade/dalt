@@ -11,8 +11,8 @@
     "prisma:dbpush": "prisma db push --schema prisma/schema.prisma",
     "prisma:seed": "node prisma/seed.js",
     "test:auth": "tsx test/run-auth-tests.ts",
-    "test": "vitest --run --threads=false",
-    "test:unit": "vitest --run --threads=false"
+    "test": "vitest --run",
+    "test:unit": "vitest --run"
   },
   "dependencies": {
     "@dalt/shared-types": "workspace:*",

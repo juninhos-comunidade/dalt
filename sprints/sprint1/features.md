@@ -37,9 +37,10 @@
   ```
 
 - [ ] Revisão:
-  - [ ] revisar configuração de connection string e secrets (vamos usar variáveis de ambiente, .env por favor)
-  - [ ] checar scripts de migration no CI
-  - [ ] vamos deixar funcionando em container por favor
+ - [x] Revisão:
+  - [x] revisar configuração de connection string e secrets (vamos usar variáveis de ambiente, .env por favor)
+  - [x] checar scripts de migration no CI
+  - [x] vamos deixar funcionando em container por favor
 
 ### 2 — Autenticação (registro, login, JWT)
 

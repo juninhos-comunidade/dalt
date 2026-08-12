@@ -10,6 +10,7 @@ A sequência de implementação deve ser seguida com rigor para que tudo funcion
 - Marque cada passo com checkbox somente após a implementação e os testes estarem concluídos.
 - Revise cuidadosamente as alterações antes de avançar.
 - Se tiver dúvidas, pare e esclareça antes de prosseguir.
+- Mantenha o `README.md` do repositório sempre atualizado quando houver mudanças relevantes de configuração, execução ou dependências.
 
 ## Onde trabalhar
 

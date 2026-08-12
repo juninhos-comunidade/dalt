@@ -1,4 +1,3 @@
-
 # Projeto Harmônico
 
 > Uma plataforma de mentoria e desenvolvimento humano para reduzir a barreira de entrada de desenvolvedores juniores no mercado de trabalho.
@@ -13,32 +12,44 @@ O diferencial da plataforma está em unir três pilares num único ecossistema:
 - **Hard Skills essenciais**, com uma trilha objetiva e sem excesso de teoria, focada no que é usado na prática;
 - **Saúde mental e suporte de carreira**, conectando novatos a profissionais especializados.
 
-O motor que sustenta tudo isso é o **senso de comunidade** e a cultura de ***pay it forward***: quem é ajudado hoje, ajuda amanhã.
+O motor que sustenta tudo isso é o **senso de comunidade** e a cultura de **_pay it forward_**: quem é ajudado hoje, ajuda amanhã.
+
+## 📚 Documentation
+
+- Keep this `README.md` up-to-date: any change that affects setup, running, environment variables, Docker configuration, or developer workflow must be reflected here. This ensures developers and CI maintainers can reproduce and run the project reliably.
 
 ## ✨ Principais Funcionalidades
 
 ### 🤝 Sistema de Apadrinhamento (Mentoria)
+
 Conexão entre novatos e desenvolvedores experientes, 100% voluntária e sem cobrança. Inclui bate-papos de orientação, alinhamento de expectativas e **entrevistas simuladas** com feedback construtivo, com matchmaking baseado nos objetivos do novato e na vivência do padrinho.
 
 ### 🧠 Trilha de Hard Skills
+
 Base essencial e prática: Estrutura de Dados e Algoritmos, Banco de Dados (SQL), Redes e Protocolos Web, Git/GitHub, Linha de Comando e Linux, Lógica Aplicada e Automação, e noções de Segurança e Testes.
 
 ### 🗣️ Trilha de Soft Skills e Vivência Corporativa
+
 Simulação de metodologias ágeis na prática (Dailies, Sprints, Kanban) e desenvolvimento de comunicação técnica e interpessoal.
 
 ### 💚 Apoio Psicológico e de Carreira
+
 Espaço de vitrine para psicólogos e especialistas de RH (revisão de currículo, LinkedIn). A plataforma **não intermedia pagamentos** — a negociação ocorre totalmente fora dela.
 
 ### 🖼️ Mural / Vitrine da Comunidade
+
 Espaço central que reúne diferentes tipos de vitrine dentro da plataforma:
+
 - **Profissionais independentes** (psicólogos, especialistas de RH) se apresentando aos novatos;
 - **Empresas parceiras** acompanhando talentos em destaque, com consentimento do usuário, como método de recrutamento;
 - **Portfólio e Dúvidas**, espaço para registrar a evolução de carreira na plataforma e canais rápidos para dúvidas da comunidade.
 
 ### 🏆 Engajamento e Gamificação Leve
+
 Hall da Fama mensal para mentores destaque e recomendações públicas que geram valor real de carreira (ex: para uso no LinkedIn). Convite automático para o novato virar padrinho ao atingir o nível pleno.
 
 ### 🐞 Laboratório de "Projetos Quebrados"
+
 Repositórios com bugs propositais para o novato investigar, corrigir e enviar Pull Requests — treinando debugging, leitura de código alheio e resiliência diante de problemas reais.
 
 ## 🛠️ Tecnologias

@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:15
+    container_name: dalt_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-dalt}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-daltpass}
+      POSTGRES_DB: ${POSTGRES_DB:-dalt_db}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  db_data:

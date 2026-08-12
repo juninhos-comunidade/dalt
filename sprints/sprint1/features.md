@@ -8,25 +8,39 @@
   1. A implementação estiver feita e funcionando.
   2. Os testes cobrirem todos os cenários listados e passarem.
   3. Um review de código for realizado e aprovado.
+  4. O `README.md` foi atualizado se as mudanças alterarem execução, configuração ou instruções de desenvolvimento.
 
 ## Passo a passo (sequencial)
 
 ### 1 — Infraestrutura do banco e ORM
 
-- [ ] Implementação:
-  - [ ] Banco de dados relacional (Postgres)
-  - [ ] O banco de dados terá que ficar em um docker compose separado, pode criar um docker compose.db
-  - [ ] Adicionar dependências e configuração de conexão
-  - [ ] Criar schema inicial (migrations básicas)
-  - [ ] Adicionar seeds mínimos (roles)
-- [ ] Testes:
-  - [ ] conexão com banco funciona em ambiente de teste
-  - [ ] migrations aplicam e rollback funcionam
-  - [ ] seeds criam `MASTER`, `MENTOR`, `APRENDIZ`
+- [x] Implementação:
+  - [x] Banco de dados relacional (Postgres)
+  - [x] O banco de dados terá que ficar em um docker compose separado, pode criar um docker compose.db
+  - [x] Adicionar dependências e configuração de conexão
+  - [x] Criar schema inicial (migrations básicas)
+  - [x] Adicionar seeds mínimos (roles)
+- [x] Testes (valide localmente):
+  - [x] conexão com banco funciona em ambiente de teste
+  - [x] migrations aplicam e rollback funcionam
+  - [x] seeds criam `MASTER`, `MENTOR`, `APRENDIZ`
+
+  Commands to validate locally (run from repo root):
+
+  ```bash
+  docker-compose -f docker-compose.db.yml up -d
+  cd apps/server-api
+  pnpm install
+  pnpm prisma:generate
+  pnpm prisma:migrate   # or pnpm prisma:dbpush
+  pnpm run prisma:seed
+  ```
+
 - [ ] Revisão:
-  - [ ] revisar configuração de connection string e secrets (vamos usar variáveis de ambiente, .env por favor)
-  - [ ] checar scripts de migration no CI
-  - [ ] vamos deixar funcionando em container por favor
+- [x] Revisão:
+- [x] revisar configuração de connection string e secrets (vamos usar variáveis de ambiente, .env por favor)
+- [x] checar scripts de migration no CI
+- [x] vamos deixar funcionando em container por favor
 
 ### 2 — Autenticação (registro, login, JWT)
 

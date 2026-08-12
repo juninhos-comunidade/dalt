@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "@dalt/shared-types": "workspace:*",
-    "fastify": "^4.26.2"
+    "fastify": "^4.26.2",
+    "@prisma/client": "^5.10.0"
   },
   "devDependencies": {
     "@types/node": "^20",

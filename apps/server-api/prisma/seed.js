@@ -1,9 +1,9 @@
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const roles = ['MASTER', 'MENTOR', 'APRENDIZ'];
+  const roles = ["MASTER", "MENTOR", "APRENDIZ"];
 
   for (const name of roles) {
     await prisma.role.upsert({
@@ -14,7 +14,7 @@ async function main() {
     console.log(`ensured role: ${name}`);
   }
 
-  console.log('Seed finished.');
+  console.log("Seed finished.");
 }
 
 main()

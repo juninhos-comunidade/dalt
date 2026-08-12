@@ -6,7 +6,9 @@ const plugin: FastifyPluginAsync = async (fastify, opts) => {
   // content creation: MENTOR or MASTER
   fastify.post(
     "/create",
-    { preHandler: [authenticate as any, authorize(["MENTOR", "MASTER"]) as any] },
+    {
+      preHandler: [authenticate as any, authorize(["MENTOR", "MASTER"]) as any],
+    },
     async (request, reply) => {
       // minimal create simulation
       return reply.status(201).send({ success: true });

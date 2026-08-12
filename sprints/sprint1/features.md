@@ -14,16 +14,28 @@
 
 ### 1 — Infraestrutura do banco e ORM
 
-- [ ] Implementação:
-  - [ ] Banco de dados relacional (Postgres)
-  - [ ] O banco de dados terá que ficar em um docker compose separado, pode criar um docker compose.db
-  - [ ] Adicionar dependências e configuração de conexão
-  - [ ] Criar schema inicial (migrations básicas)
-  - [ ] Adicionar seeds mínimos (roles)
-- [ ] Testes:
+- [x] Implementação:
+  - [x] Banco de dados relacional (Postgres)
+  - [x] O banco de dados terá que ficar em um docker compose separado, pode criar um docker compose.db
+  - [x] Adicionar dependências e configuração de conexão
+  - [x] Criar schema inicial (migrations básicas)
+  - [x] Adicionar seeds mínimos (roles)
+- [ ] Testes (valide localmente):
   - [ ] conexão com banco funciona em ambiente de teste
   - [ ] migrations aplicam e rollback funcionam
   - [ ] seeds criam `MASTER`, `MENTOR`, `APRENDIZ`
+
+  Commands to validate locally (run from repo root):
+
+  ```bash
+  docker-compose -f docker-compose.db.yml up -d
+  cd apps/server-api
+  pnpm install
+  pnpm prisma:generate
+  pnpm prisma:migrate   # or pnpm prisma:dbpush
+  pnpm run prisma:seed
+  ```
+
 - [ ] Revisão:
   - [ ] revisar configuração de connection string e secrets (vamos usar variáveis de ambiente, .env por favor)
   - [ ] checar scripts de migration no CI

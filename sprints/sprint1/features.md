@@ -44,18 +44,18 @@
 
 ### 2 — Autenticação (registro, login, JWT)
 
-- [ ] Implementação:
-  - [ ] endpoint `POST /auth/register`
-  - [ ] endpoint `POST /auth/login`
-  - [ ] hashing de senha seguro (bcrypt/scrypt/argon2)
-  - [ ] geração de JWT contendo `user.id` e `role`
-  - [ ] middleware de proteção de rotas por JWT
-- [ ] Testes:
-  - [ ] registro cria usuário com role correto
-  - [ ] registro com email duplicado retorna 4xx
-  - [ ] login válido retorna JWT assinada
-  - [ ] token inválido/expirado é rejeitado
-  - [ ] rotas protegidas aceitam token e rejeitam requests sem token
+- [x] Implementação:
+  - [x] endpoint `POST /auth/register`
+  - [x] endpoint `POST /auth/login`
+  - [x] hashing de senha seguro (bcrypt/scrypt/argon2)
+  - [x] geração de JWT contendo `user.id` e `role`
+  - [x] middleware de proteção de rotas por JWT
+- [x] Testes:
+  - [x] registro cria usuário com role correto
+  - [x] registro com email duplicado retorna 4xx
+  - [x] login válido retorna JWT assinada
+  - [x] token inválido/expirado é rejeitado
+  - [x] rotas protegidas aceitam token e rejeitam requests sem token
 - [ ] Revisão:
   - [ ] revisar política de expiração e refresh se necessário
   - [ ] checar logs de autenticação para dados sensíveis

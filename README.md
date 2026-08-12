@@ -145,3 +145,48 @@ docker compose logs -f
 ```
 
 O projeto estará disponível em `http://localhost:3000`. Para encerrar o container, execute `docker compose down`.
+
+## 🔐 Autenticação: tokens, expiração e variáveis de ambiente
+
+O backend (`apps/server-api`) usa JWTs para `accessToken` e tokens opacos rotativos para `refreshToken`.
+
+- `accessToken`: JWT curto-prazo (por padrão 15 minutos). Contém `sub` (user.id) e `role`.
+- `refreshToken`: token opaco retornado ao cliente; armazenamos apenas o hash (SHA-256) no banco e o rotacionamos no refresh.
+
+Boas práticas e comportamento implementado:
+
+- Nunca logar o `accessToken` ou `refreshToken` em texto claro (tests e logs evitam exposição).
+- Armazenamos apenas `passwordHash` (argon2) e `refreshTokenHash` no banco.
+- Ao usar o endpoint de refresh, o token antigo é revogado e um novo par (access + refresh) é emitido.
+
+Variáveis de ambiente importantes (defina em `.env` ou no ambiente do container):
+
+- `DATABASE_URL` — string de conexão do Postgres (ex: `postgresql://user:pass@db:5432/dbname?schema=public`).
+- `JWT_SECRET` — segredo para assinar JWTs (mantenha seguro, não comite em repositório).
+- `ACCESS_TOKEN_TTL` — tempo de vida do access token em segundos (padrão usado: `900` = 15 minutos).
+- `REFRESH_TOKEN_TTL_DAYS` — validade do refresh token em dias (padrão: `30`).
+
+Exemplo mínimo de `.env` para desenvolvimento local (não comitar):
+
+```env
+# Postgres
+DATABASE_URL=postgresql://dalt:daltpass@db:5432/dalt_db?schema=public
+
+# JWT
+JWT_SECRET=change_this_to_a_strong_random_value
+ACCESS_TOKEN_TTL=900
+REFRESH_TOKEN_TTL_DAYS=30
+```
+
+Como rodar os testes de autenticação localmente (via container — recomendado para consistência):
+
+```bash
+docker-compose -f docker-compose.db.yml up -d
+cd apps/server-api
+pnpm install
+pnpm prisma:generate
+pnpm prisma:dbpush --accept-data-loss
+pnpm run test:auth
+```
+
+Se preferir usar um test runner (Vitest/Jest) para maior controle e isolamento, podemos migrar os testes — me avise que eu faço a migração automática e atualizo `package.json`.

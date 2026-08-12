@@ -10,6 +10,37 @@ Endpoints:
   - body: { email, password }
   - responses: 200 with { token } or 401
 
+Examples (curl)
+
+- Register:
+
+```bash
+curl -X POST http://localhost:3001/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email":"alice@example.com","password":"strongpass","role":"APRENDIZ"}'
+```
+
+- Login:
+
+```bash
+curl -X POST http://localhost:3001/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"alice@example.com","password":"strongpass"}'
+```
+
+- Refresh:
+
+```bash
+curl -X POST http://localhost:3001/auth/refresh \
+  -H "Content-Type: application/json" \
+  -d '{"refreshToken":"<REFRESH_TOKEN_HERE>"}'
+```
+
+Notes:
+
+- The server runs on port `3001` in our local docker-compose setup for the API; change host/port as appropriate.
+- Responses contain `data.accessToken` and `data.refreshToken` on successful login/refresh. Never log these tokens in CI logs.
+
 Run integration tests (containerized)
 
 ```bash

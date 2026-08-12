@@ -3,51 +3,81 @@ import { createMentorshipService } from "./services/mentorship-services";
 import { inMemoryMentorshipRepository } from "./repositories/in-memory-mentorship-repository";
 import { createProfileService } from "./services/profile-services";
 import { inMemoryProfileRepository } from "./repositories/in-memory-profile-repository";
+import authRoutes from "./routes/auth-routes";
+import protectedRoutes from "./routes/protected-routes";
 
-const app = fastify({ logger: true });
+export function buildServer(opts = { logger: true }) {
+  const app = fastify(opts as any);
 
-const mentorshipService = createMentorshipService(inMemoryMentorshipRepository);
-const createProfile = createProfileService(inMemoryProfileRepository);
+  const mentorshipService = createMentorshipService(
+    inMemoryMentorshipRepository,
+  );
+  const createProfile = createProfileService(inMemoryProfileRepository);
 
-app.post('/mentorship/request', async (request, reply) => {
+  app.post("/mentorship/request", async (request, reply) => {
     const { novatoId, padrinhoId, objetivo } = request.body as any;
     try {
-        const result = await mentorshipService.requestMentorship(novatoId, padrinhoId, objetivo);
-        return reply.send({ success: true, data: result });
+      const result = await mentorshipService.requestMentorship(
+        novatoId,
+        padrinhoId,
+        objetivo,
+      );
+      return reply.send({ success: true, data: result });
     } catch (error) {
-        return reply.status(400).send({ success: false, error: (error as Error).message });
+      return reply
+        .status(400)
+        .send({ success: false, error: (error as Error).message });
     }
-});
+  });
 
-app.post('/mentorship/respond', async (request, reply) => {
+  app.post("/mentorship/respond", async (request, reply) => {
     const { requestId, decision } = request.body as any;
     try {
-        const result = await mentorshipService.respondToRequest(requestId, decision);
-        return reply.send({ success: true, data: result });
+      const result = await mentorshipService.respondToRequest(
+        requestId,
+        decision,
+      );
+      return reply.send({ success: true, data: result });
     } catch (error) {
-        return reply.status(400).send({ success: false, error: (error as Error).message });
+      return reply
+        .status(400)
+        .send({ success: false, error: (error as Error).message });
     }
-});
+  });
 
-app.post('/profile', async (request, reply) => {
+  app.post("/profile", async (request, reply) => {
     const { fullName, role } = request.body as any;
     try {
-        const result = await createProfile(fullName, role);
-        return reply.send({ success: true, data: result });
+      const result = await createProfile(fullName, role);
+      return reply.send({ success: true, data: result });
     } catch (error) {
-        return reply.status(400).send({ success: false, error: (error as Error).message });
+      return reply
+        .status(400)
+        .send({ success: false, error: (error as Error).message });
     }
-});
+  });
 
-const start = async () => {
+  // auth routes (register/login)
+  app.register(authRoutes, { prefix: "/auth" });
+
+  // protected test route
+  app.register(protectedRoutes, { prefix: "/protected" });
+
+  return app;
+}
+
+if (require.main === module) {
+  const start = async () => {
     try {
-        const port = process.env.PORT ? parseInt(process.env.PORT) : 3001;
-        await app.listen({ port, host: '0.0.0.0' });
-        console.log(`Server listening on port ${port}`);
+      const port = process.env.PORT ? parseInt(process.env.PORT) : 3001;
+      const app = buildServer({ logger: true });
+      await app.listen({ port, host: "0.0.0.0" });
+      console.log(`Server listening on port ${port}`);
     } catch (err) {
-        app.log.error(err);
-        process.exit(1);
+      console.error(err);
+      process.exit(1);
     }
-};
+  };
 
-start();
+  start();
+}

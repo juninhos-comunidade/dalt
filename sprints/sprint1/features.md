@@ -20,10 +20,10 @@
   - [x] Adicionar dependências e configuração de conexão
   - [x] Criar schema inicial (migrations básicas)
   - [x] Adicionar seeds mínimos (roles)
-- [ ] Testes (valide localmente):
-  - [ ] conexão com banco funciona em ambiente de teste
-  - [ ] migrations aplicam e rollback funcionam
-  - [ ] seeds criam `MASTER`, `MENTOR`, `APRENDIZ`
+- [x] Testes (valide localmente):
+  - [x] conexão com banco funciona em ambiente de teste
+  - [x] migrations aplicam e rollback funcionam
+  - [x] seeds criam `MASTER`, `MENTOR`, `APRENDIZ`
 
   Commands to validate locally (run from repo root):
 

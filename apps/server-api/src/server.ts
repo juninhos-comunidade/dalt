@@ -5,6 +5,9 @@ import { createProfileService } from "./services/profile-services";
 import { inMemoryProfileRepository } from "./repositories/in-memory-profile-repository";
 import authRoutes from "./routes/auth-routes";
 import protectedRoutes from "./routes/protected-routes";
+import roleRoutes from "./routes/role-routes";
+import authenticate from "./plugins/jwt-middleware";
+import { authorize } from "./plugins/role-guard";
 
 export function buildServer(opts = { logger: true }) {
   const app = fastify(opts as any);
@@ -14,54 +17,70 @@ export function buildServer(opts = { logger: true }) {
   );
   const createProfile = createProfileService(inMemoryProfileRepository);
 
-  app.post("/mentorship/request", async (request, reply) => {
-    const { novatoId, padrinhoId, objetivo } = request.body as any;
-    try {
-      const result = await mentorshipService.requestMentorship(
-        novatoId,
-        padrinhoId,
-        objetivo,
-      );
-      return reply.send({ success: true, data: result });
-    } catch (error) {
-      return reply
-        .status(400)
-        .send({ success: false, error: (error as Error).message });
-    }
-  });
+  app.post(
+    "/mentorship/request",
+    { preHandler: [authenticate as any] },
+    async (request, reply) => {
+      const { novatoId, padrinhoId, objetivo } = request.body as any;
+      try {
+        const result = await mentorshipService.requestMentorship(
+          novatoId,
+          padrinhoId,
+          objetivo,
+        );
+        return reply.send({ success: true, data: result });
+      } catch (error) {
+        return reply
+          .status(400)
+          .send({ success: false, error: (error as Error).message });
+      }
+    },
+  );
+  app.post(
+    "/mentorship/respond",
+    {
+      preHandler: [authenticate as any, authorize(["MENTOR", "MASTER"]) as any],
+    },
+    async (request, reply) => {
+      const { requestId, decision } = request.body as any;
+      try {
+        const result = await mentorshipService.respondToRequest(
+          requestId,
+          decision,
+        );
+        return reply.send({ success: true, data: result });
+      } catch (error) {
+        return reply
+          .status(400)
+          .send({ success: false, error: (error as Error).message });
+      }
+    },
+  );
 
-  app.post("/mentorship/respond", async (request, reply) => {
-    const { requestId, decision } = request.body as any;
-    try {
-      const result = await mentorshipService.respondToRequest(
-        requestId,
-        decision,
-      );
-      return reply.send({ success: true, data: result });
-    } catch (error) {
-      return reply
-        .status(400)
-        .send({ success: false, error: (error as Error).message });
-    }
-  });
-
-  app.post("/profile", async (request, reply) => {
-    const { fullName, role } = request.body as any;
-    try {
-      const result = await createProfile(fullName, role);
-      return reply.send({ success: true, data: result });
-    } catch (error) {
-      return reply
-        .status(400)
-        .send({ success: false, error: (error as Error).message });
-    }
-  });
+  app.post(
+    "/profile",
+    { preHandler: [authenticate as any, authorize(["MASTER"]) as any] },
+    async (request, reply) => {
+      const { fullName, role } = request.body as any;
+      try {
+        const result = await createProfile(fullName, role);
+        return reply.send({ success: true, data: result });
+      } catch (error) {
+        return reply
+          .status(400)
+          .send({ success: false, error: (error as Error).message });
+      }
+    },
+  );
 
   // auth routes (register/login)
   app.register(authRoutes, { prefix: "/auth" });
 
   // protected test route
   app.register(protectedRoutes, { prefix: "/protected" });
+
+  // role test routes
+  app.register(roleRoutes, { prefix: "/content" });
 
   return app;
 }

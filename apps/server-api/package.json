@@ -11,6 +11,7 @@
     "prisma:dbpush": "prisma db push --schema prisma/schema.prisma",
     "prisma:seed": "node prisma/seed.js",
     "test:auth": "tsx test/run-auth-tests.ts",
+    "setup": "pnpm install && pnpm prisma:generate && pnpm prisma:dbpush --accept-data-loss && pnpm prisma:seed",
     "test": "vitest --run",
     "test:unit": "vitest --run"
   },

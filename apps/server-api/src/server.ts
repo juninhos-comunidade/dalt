@@ -59,7 +59,7 @@ export function buildServer(opts = { logger: true }) {
 
   app.post(
     "/profile",
-    { preHandler: [authenticate as any] },
+    { preHandler: [authenticate as any, authorize(["MASTER"]) as any] },
     async (request, reply) => {
       const { fullName, role } = request.body as any;
       try {

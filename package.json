@@ -4,7 +4,7 @@
   "private": true,
   "engines": {
     "node": ">=18",
-    "pnpm": ">=8"
+    "pnpm": ">=11"
   },
   "scripts": {
     "dev": "pnpm --parallel -r run dev",

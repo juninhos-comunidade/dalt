@@ -11,7 +11,10 @@ const stores = new Map<string, { count: number; first: number }>();
 export function rateLimiter(opts: Options = {}) {
   const windowMs = opts.windowMs ?? 60_000; // 1 minute
   const max = opts.max ?? 5;
-  const keyFn = opts.keyFn ?? ((req: FastifyRequest) => (req.ip || (req.headers['x-forwarded-for'] as string) || 'unknown'));
+  const keyFn =
+    opts.keyFn ??
+    ((req: FastifyRequest) =>
+      req.ip || (req.headers["x-forwarded-for"] as string) || "unknown");
 
   return async function (request: FastifyRequest, reply: FastifyReply) {
     const key = keyFn(request);

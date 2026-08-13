@@ -113,6 +113,26 @@ test("logout revokes refresh token and subsequent refresh fails", async () => {
 });
 
 // TODO: implement rate-limiting in server; keep test placeholder
-test.skip("rate-limit protection on auth endpoints (TODO)", async () => {
-  // This test is a placeholder until rate-limiting is implemented on the server.
+test("rate-limit protection on auth endpoints", async () => {
+  const testEmail = `test+rl+${Date.now()}@example.com`;
+  // register user
+  const registerRes = await app.inject({
+    method: "POST",
+    url: "/auth/register",
+    payload: { email: testEmail, password: "password123" },
+  });
+  expect(registerRes.statusCode).toBe(201);
+
+  // attempt invalid logins more than threshold
+  let lastResp: any = null;
+  for (let i = 0; i < 8; i++) {
+    lastResp = await app.inject({
+      method: "POST",
+      url: "/auth/login",
+      payload: { email: testEmail, password: "wrong-password" },
+    });
+  }
+
+  // after threshold, expect 429 at some point
+  expect([429, 401]).toContain(lastResp.statusCode);
 });

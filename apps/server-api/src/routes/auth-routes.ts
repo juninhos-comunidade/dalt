@@ -1,6 +1,7 @@
 import { FastifyPluginAsync } from "fastify";
 import { PrismaClient } from "@prisma/client";
 import { createAuthService } from "../services/auth-services";
+import { rateLimiter, resetRateLimit } from "../plugins/rate-limiter";
 
 const plugin: FastifyPluginAsync = async (fastify, opts) => {
   const prisma = new PrismaClient();
@@ -20,7 +21,10 @@ const plugin: FastifyPluginAsync = async (fastify, opts) => {
     }
   });
 
-  fastify.post("/login", async (request, reply) => {
+  fastify.post(
+    "/login",
+    { preHandler: [rateLimiter({ max: 5, windowMs: 60_000, keyFn: (req) => (req.body as any)?.email || req.ip }) as any] },
+    async (request, reply) => {
     const { email, password } = request.body as any;
     if (!email || !password)
       return reply.status(400).send({ error: "email and password required" });
@@ -31,7 +35,7 @@ const plugin: FastifyPluginAsync = async (fastify, opts) => {
       return reply.status(401).send({ error: "invalid credentials" });
     }
   });
-
+  );
   fastify.post("/refresh", async (request, reply) => {
     const { refreshToken } = request.body as any;
     if (!refreshToken)

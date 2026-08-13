@@ -35,7 +35,6 @@ const plugin: FastifyPluginAsync = async (fastify, opts) => {
       return reply.status(401).send({ error: "invalid credentials" });
     }
   });
-  );
   fastify.post("/refresh", async (request, reply) => {
     const { refreshToken } = request.body as any;
     if (!refreshToken)

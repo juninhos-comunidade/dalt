@@ -23,4 +23,4 @@ services:
     environment:
       - NODE_ENV=development
       - CI=true
-    command: sh -c "pnpm install --no-frozen-lockfile && pnpm --filter @dalt/api run dev"
+    command: sh -c "pnpm install --no-frozen-lockfile && pnpm --filter @dalt/api run prisma:generate && pnpm --filter @dalt/api run dev"

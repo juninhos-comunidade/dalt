@@ -13,20 +13,22 @@
     "test:auth": "tsx test/run-auth-tests.ts",
     "setup": "pnpm install && pnpm prisma:generate && pnpm prisma:dbpush --accept-data-loss && pnpm prisma:seed",
     "test": "vitest --run",
-    "test:unit": "vitest --run"
+    "test:unit": "vitest --run",
+    "postinstall": "pnpm run prisma:generate"
   },
   "dependencies": {
     "@dalt/shared-types": "workspace:*",
-    "fastify": "^4.26.2",
+    "@fastify/cors": "^11.3.0",
     "@prisma/client": "^5.10.0",
     "argon2": "^0.30.0",
+    "fastify": "^4.26.2",
     "jsonwebtoken": "^9.0.0"
   },
   "devDependencies": {
     "@types/node": "^20",
+    "prisma": "^5.10.0",
     "tsx": "^4.7.1",
     "typescript": "^5",
-    "prisma": "^5.10.0",
     "vitest": "^1.2.0"
   }
 }

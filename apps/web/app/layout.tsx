@@ -6,6 +6,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import theme from '../src/theme';
 import "./globals.css";
 import Navbar from '../src/components/Navbar';
+import GlobalChat from '../src/components/GlobalChat';
 
 const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-jetbrains' });
 const firaCode = Fira_Code({ subsets: ['latin'], variable: '--font-fira' });
@@ -28,6 +29,7 @@ export default function RootLayout({
             <CssBaseline />
             <Navbar />
             {children}
+            <GlobalChat />
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

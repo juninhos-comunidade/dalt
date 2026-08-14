@@ -63,6 +63,10 @@ export function buildServer(opts = { logger: true }) {
   // protected test route
   app.register(protectedRoutes, { prefix: "/protected" });
 
+  // chat routes
+  const chatRoutes = require("./routes/chat.routes").default;
+  app.register(chatRoutes, { prefix: "/chats" });
+
   return app;
 }
 

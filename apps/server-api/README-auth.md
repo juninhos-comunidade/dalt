@@ -41,6 +41,18 @@ Notes:
 - The server runs on port `3001` in our local docker-compose setup for the API; change host/port as appropriate.
 - Responses contain `data.accessToken` and `data.refreshToken` on successful login/refresh. Never log these tokens in CI logs.
 
+Automated setup
+
+You can run the convenience `setup` script to install dependencies, generate Prisma client, push the schema and run seeds:
+
+```bash
+# from repo root
+cd apps/server-api
+pnpm run setup
+```
+
+This will ensure the `MASTER`, `MENTOR` and `APRENDIZ` roles are present via `prisma/seed.js`.
+
 Run integration tests (containerized)
 
 ```bash

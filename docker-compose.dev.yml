@@ -10,6 +10,7 @@ services:
     environment:
       - NODE_ENV=development
       - CI=true
+      - BACKEND_URL=http://backend-api:3001
     command: sh -c "pnpm install --no-frozen-lockfile && pnpm --filter @dalt/web run dev"
 
   backend-api:

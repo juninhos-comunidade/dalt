@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -41,10 +41,38 @@ const registerSchema = loginSchema.extend({
 type LoginFormData = z.infer<typeof loginSchema>;
 type RegisterFormData = z.infer<typeof registerSchema>;
 
+const translateError = (err: string) => {
+  if (!err) return "Ocorreu um erro inesperado.";
+  const lower = err.toLowerCase();
+  if (lower.includes("invalid credentials")) return "E-mail ou senha incorretos.";
+  if (lower.includes("email_already_exists") || lower.includes("already exists")) return "Este e-mail já está cadastrado.";
+  if (lower.includes("weak_password")) return "A senha é muito fraca (mínimo de 6 caracteres).";
+  if (lower.includes("invalid_role")) return "O tipo de conta selecionado é inválido.";
+  return "Ocorreu um erro inesperado.";
+};
+
 export default function AuthForm({ isMobile = false, onClose }: AuthFormProps) {
   const [mode, setMode] = useState<"login" | "register">("login");
   const [showPassword, setShowPassword] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [formSuccess, setFormSuccess] = useState<string | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (formError) {
+      timeout = setTimeout(() => setFormError(null), 5000);
+    }
+    return () => clearTimeout(timeout);
+  }, [formError]);
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (formSuccess) {
+      timeout = setTimeout(() => setFormSuccess(null), 5000);
+    }
+    return () => clearTimeout(timeout);
+  }, [formSuccess]);
 
   const {
     register,
@@ -56,6 +84,9 @@ export default function AuthForm({ isMobile = false, onClose }: AuthFormProps) {
   });
 
   const onSubmit = (data: RegisterFormData | LoginFormData) => {
+    setFormError(null);
+    setFormSuccess(null);
+
     if (mode === "login") {
       // call login
       fetch("/api/auth/login", {
@@ -69,11 +100,16 @@ export default function AuthForm({ isMobile = false, onClose }: AuthFormProps) {
             // store tokens
             localStorage.setItem("accessToken", json.data.accessToken);
             localStorage.setItem("refreshToken", json.data.refreshToken);
+            if (json.data.user) {
+              localStorage.setItem("user", JSON.stringify(json.data.user));
+            }
+            window.dispatchEvent(new Event("auth-changed"));
             router.push("/");
           } else {
-            alert(json.error || "Erro ao logar");
+            setFormError(translateError(json.error));
           }
-        });
+        })
+        .catch(() => setFormError("Erro de conexão"));
     } else {
       // register
       fetch("/api/auth/register", {
@@ -84,12 +120,40 @@ export default function AuthForm({ isMobile = false, onClose }: AuthFormProps) {
         .then((r) => r.json())
         .then((json) => {
           if (json.success) {
-            alert("Cadastro realizado, faça login");
-            switchMode("login");
+            setFormSuccess("Cadastro realizado com sucesso! Entrando...");
+            
+            // Auto-login
+            fetch("/api/auth/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email: data.email, password: data.password }),
+            })
+              .then((lr) => lr.json())
+              .then((ljson) => {
+                if (ljson.success && ljson.data) {
+                  localStorage.setItem("accessToken", ljson.data.accessToken);
+                  localStorage.setItem("refreshToken", ljson.data.refreshToken);
+                  if (ljson.data.user) {
+                    localStorage.setItem("user", JSON.stringify(ljson.data.user));
+                  }
+                  window.dispatchEvent(new Event("auth-changed"));
+                  router.push("/");
+                } else {
+                  setFormSuccess("Cadastro realizado com sucesso! Faça login para continuar.");
+                  setMode("login");
+                  reset();
+                }
+              })
+              .catch(() => {
+                setFormSuccess("Cadastro realizado com sucesso! Faça login para continuar.");
+                setMode("login");
+                reset();
+              });
           } else {
-            alert(json.error || "Erro ao cadastrar");
+            setFormError(translateError(json.error));
           }
-        });
+        })
+        .catch(() => setFormError("Erro de conexão"));
     }
   };
 
@@ -100,6 +164,8 @@ export default function AuthForm({ isMobile = false, onClose }: AuthFormProps) {
   const handleBack = () => {
     if (mode === "register") {
       setMode("login");
+      setFormError(null);
+      setFormSuccess(null);
       reset(); // Clear errors when switching modes
     } else {
       if (isMobile) {
@@ -112,12 +178,22 @@ export default function AuthForm({ isMobile = false, onClose }: AuthFormProps) {
 
   const switchMode = (newMode: "login" | "register") => {
     setMode(newMode);
+    setFormError(null);
+    setFormSuccess(null);
     reset(); // Clear errors when switching modes
   };
 
   const textFieldStyles = {
     "& .MuiOutlinedInput-root": {
       borderRadius: 2, // slightly rounded
+      ...(formError && {
+        animation: "inputErrorBlink 1.5s infinite",
+      }),
+    },
+    "@keyframes inputErrorBlink": {
+      "0%": { boxShadow: "0 0 0 0 transparent" },
+      "50%": { boxShadow: "0 0 8px 1px #FF5252" },
+      "100%": { boxShadow: "0 0 0 0 transparent" },
     },
   };
 
@@ -168,6 +244,7 @@ export default function AuthForm({ isMobile = false, onClose }: AuthFormProps) {
       {/* Form Fields */}
       <Box
         component="form"
+        noValidate
         onSubmit={handleSubmit(onSubmit)}
         sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}
       >
@@ -239,6 +316,42 @@ export default function AuthForm({ isMobile = false, onClose }: AuthFormProps) {
             ),
           }}
         />
+
+        {formError && (
+          <Typography
+            variant="body2"
+            sx={{
+              color: "#FF5252",
+              fontWeight: "bold",
+              textAlign: "center",
+              animation: "blink 1.5s infinite",
+              "@keyframes blink": {
+                "0%": { opacity: 1 },
+                "50%": { opacity: 0.4 },
+                "100%": { opacity: 1 },
+              },
+            }}
+          >
+            {formError}
+          </Typography>
+        )}
+        {formSuccess && (
+          <Typography
+            color="success.main"
+            variant="body2"
+            sx={{
+              textAlign: "center",
+              animation: "blink 1.5s infinite",
+              "@keyframes blink": {
+                "0%": { opacity: 1 },
+                "50%": { opacity: 0.4 },
+                "100%": { opacity: 1 },
+              },
+            }}
+          >
+            {formSuccess}
+          </Typography>
+        )}
 
         <Button
           type="submit"

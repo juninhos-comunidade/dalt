@@ -33,7 +33,7 @@ const publicPages = [
   { name: 'Home', path: '/' },
   { name: 'Sobre', path: '/sobre' },
   { name: 'Comunidade', path: '/comunidade' },
-  { name: 'Mentoria', path: '/mentoria' },
+  { name: 'Mural', path: '/mural' },
   { name: 'Blog', path: '/blog' },
 ];
 
@@ -46,7 +46,15 @@ const privatePages = [
 export default function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [loginAnchorEl, setLoginAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<any>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const storedUser = window.localStorage.getItem("user");
+        if (storedUser) return JSON.parse(storedUser);
+      } catch (e) {}
+    }
+    return null;
+  });
   const [authMenuAnchorEl, setAuthMenuAnchorEl] = useState<HTMLElement | null>(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));

@@ -13,6 +13,8 @@ export function createAuthService(prisma: PrismaClient) {
       roleName = "APRENDIZ",
       name?: string,
     ) {
+      if (!password || password.length < 6) throw new Error("WEAK_PASSWORD");
+
       // do not allow clients to register as MASTER
       const normalizedRole = String(roleName || "APRENDIZ").toUpperCase();
       if (normalizedRole === "MASTER") throw new Error("INVALID_ROLE");

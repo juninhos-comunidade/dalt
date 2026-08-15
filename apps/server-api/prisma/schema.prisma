@@ -29,6 +29,8 @@ model User {
   roleId       Int
   role         Role   @relation(fields: [roleId], references: [id])
   refreshTokens RefreshToken[]
+  chatParticipations ChatParticipant[]
+  messagesSent       Message[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
@@ -41,4 +43,49 @@ model RefreshToken {
   revoked    Boolean  @default(false)
   expiresAt  DateTime
   createdAt  DateTime @default(now())
+}
+
+enum ChatType {
+  DIRECT
+  GROUP
+}
+
+enum MessageType {
+  TEXT
+  AUDIO
+}
+
+model Chat {
+  id           Int               @id @default(autoincrement())
+  type         ChatType          @default(DIRECT)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  participants ChatParticipant[]
+  messages     Message[]
+}
+
+model ChatParticipant {
+  id       Int      @id @default(autoincrement())
+  chatId   Int
+  userId   Int
+  joinedAt DateTime @default(now())
+  chat     Chat     @relation(fields: [chatId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
+
+  @@unique([chatId, userId])
+}
+
+model Message {
+  id        Int         @id @default(autoincrement())
+  chatId    Int
+  senderId  Int
+  type      MessageType @default(TEXT)
+  content   String?     
+  audioUrl  String?     
+  sentAt    DateTime    @default(now())
+  editedAt  DateTime?
+  isRead    Boolean     @default(false)
+
+  chat      Chat        @relation(fields: [chatId], references: [id])
+  sender    User        @relation(fields: [senderId], references: [id])
 }

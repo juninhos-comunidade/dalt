@@ -100,20 +100,20 @@ Criar as features principais da plataforma com sequência estrita de implementa�
 
 ### 6. Implementar chat com histórico
 
-- [ ] Criar modelo de sala de chat e participantes.
+- [x] Criar modelo de sala de chat e participantes.
   - Testes:
-    - [ ] sala criada com participantes válidos
-    - [ ] usuário não participante não vê sala
-- [ ] Implementar envio de mensagens.
+    - [x] sala criada com participantes válidos
+    - [x] usuário não participante não vê sala
+- [x] Implementar envio de mensagens.
   - Testes:
-    - [ ] mensagem salva com `sentAt`
-    - [ ] `isRead` inicial é falso
-    - [ ] mensagem inválida é rejeitada
-- [ ] Implementar listagem de mensagens e status de leitura.
+    - [x] mensagem salva com `sentAt`
+    - [x] `isRead` inicial é falso
+    - [x] mensagem inválida é rejeitada
+- [x] Implementar listagem de mensagens e status de leitura.
   - Testes:
-    - [ ] mensagens aparecem em ordem cronológica
-    - [ ] marcar como lida atualiza `isRead`
-    - [ ] edição atualiza `editedAt`
+    - [x] mensagens aparecem em ordem cronológica
+    - [x] marcar como lida atualiza `isRead`
+    - [x] edição atualiza `editedAt`
 
 ### 7. Revisão e melhoria final
 

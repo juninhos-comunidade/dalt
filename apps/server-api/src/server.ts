@@ -1,4 +1,5 @@
 import fastify from "fastify";
+import cors from "@fastify/cors";
 import { createMentorshipService } from "./services/mentorship-services";
 import { inMemoryMentorshipRepository } from "./repositories/in-memory-mentorship-repository";
 import { createProfileService } from "./services/profile-services";
@@ -11,6 +12,11 @@ import { authorize } from "./plugins/role-guard";
 
 export function buildServer(opts = { logger: true }) {
   const app = fastify(opts as any);
+
+  app.register(cors, {
+    origin: "*", // ou configure para o host específico do frontend
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  });
 
   const mentorshipService = createMentorshipService(
     inMemoryMentorshipRepository,
@@ -79,8 +85,15 @@ export function buildServer(opts = { logger: true }) {
   // protected test route
   app.register(protectedRoutes, { prefix: "/protected" });
 
+  // chat routes
+  const chatRoutes = require("./routes/chat.routes").default;
+  app.register(chatRoutes, { prefix: "/chats" });
   // role test routes
   app.register(roleRoutes, { prefix: "/content" });
+
+  // user routes
+  const userRoutes = require("./routes/user.routes").default;
+  app.register(userRoutes, { prefix: "/users" });
 
   return app;
 }

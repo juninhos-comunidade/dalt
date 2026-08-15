@@ -18,10 +18,10 @@
   },
   "dependencies": {
     "@dalt/shared-types": "workspace:*",
-    "@fastify/cors": "^11.3.0",
+    "@fastify/cors": "^11.0.0",
     "@prisma/client": "^5.10.0",
     "argon2": "^0.30.0",
-    "fastify": "^4.26.2",
+    "fastify": "^5.0.0",
     "jsonwebtoken": "^9.0.0"
   },
   "devDependencies": {

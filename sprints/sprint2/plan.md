@@ -15,21 +15,21 @@ Criar as features principais da plataforma com sequência estrita de implementa�
 
 ### 1. Configurar infraestrutura de autenticação
 
-- [ ] Implementar endpoint de registro de usuário.
+- [x] Implementar endpoint de registro de usuário.
   - Testes:
-    - [ ] usuário novo é criado com role correta
-    - [ ] email duplicado retorna erro
-    - [ ] senha fraca é rejeitada se regra definida
-- [ ] Implementar endpoint de login com JWT.
+    - [x] usuário novo é criado com role correta
+    - [x] email duplicado retorna erro
+    - [x] senha fraca é rejeitada se regra definida
+- [x] Implementar endpoint de login com JWT.
   - Testes:
-    - [ ] login válido retorna token JWT
-    - [ ] login inválido retorna erro de credenciais
-    - [ ] token inclui `user.id` e `role`
-- [ ] Implementar middleware de validação de JWT.
+    - [x] login válido retorna token JWT
+    - [x] login inválido retorna erro de credenciais
+    - [x] token inclui `user.id` e `role`
+- [x] Implementar middleware de validação de JWT.
   - Testes:
-    - [ ] rota autenticada aceita token válido
-    - [ ] token expirado ou inválido é rejeitado
-    - [ ] rota pública funciona sem token
+    - [x] rota autenticada aceita token válido
+    - [x] token expirado ou inválido é rejeitado
+    - [x] rota pública funciona sem token
 
 ### 2. Criar roles e validação de permissões
 

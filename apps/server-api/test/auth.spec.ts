@@ -37,6 +37,13 @@ afterAll(async () => {
 test("auth register/login/refresh flow", async () => {
   const testEmail = `test+auth+${Date.now()}@example.com`;
 
+  const weakRes = await app.inject({
+    method: "POST",
+    url: "/auth/register",
+    payload: { email: `weak_${testEmail}`, password: "123" },
+  });
+  expect(weakRes.statusCode).toBe(400);
+
   const registerRes = await app.inject({
     method: "POST",
     url: "/auth/register",
@@ -50,6 +57,13 @@ test("auth register/login/refresh flow", async () => {
     payload: { email: testEmail, password: "password123" },
   });
   expect(dup.statusCode).toBe(409);
+
+  const invalidLogin = await app.inject({
+    method: "POST",
+    url: "/auth/login",
+    payload: { email: testEmail, password: "wrongpassword" },
+  });
+  expect(invalidLogin.statusCode).toBe(401);
 
   const login = await app.inject({
     method: "POST",
@@ -66,6 +80,13 @@ test("auth register/login/refresh flow", async () => {
 
   const noTokenResp = await app.inject({ method: "GET", url: "/protected" });
   expect(noTokenResp.statusCode).toBe(401);
+
+  const invalidTokenResp = await app.inject({
+    method: "GET",
+    url: "/protected",
+    headers: { authorization: `Bearer invalid.token.here` },
+  });
+  expect(invalidTokenResp.statusCode).toBe(401);
 
   const withToken = await app.inject({
     method: "GET",

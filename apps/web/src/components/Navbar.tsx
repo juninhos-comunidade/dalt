@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   AppBar,
   Box,
@@ -27,8 +27,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import AuthForm from './AuthForm';
 
-// Mocking auth state
-const isLoggedIn = false;
+// Real auth state is used inside the component
 
 const publicPages = [
   { name: 'Home', path: '/' },
@@ -47,9 +46,41 @@ const privatePages = [
 export default function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [loginAnchorEl, setLoginAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [user, setUser] = useState<any>(null);
+  const [authMenuAnchorEl, setAuthMenuAnchorEl] = useState<HTMLElement | null>(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const pathname = usePathname();
+
+  useEffect(() => {
+    const checkAuth = () => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch(e) {
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+    };
+    checkAuth();
+    window.addEventListener("auth-changed", checkAuth);
+    return () => window.removeEventListener("auth-changed", checkAuth);
+  }, []);
+
+  const isLoggedIn = !!user;
+  const userInitial = user?.name ? user.name.charAt(0).toUpperCase() : "U";
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
+    setUser(null);
+    setAuthMenuAnchorEl(null);
+    window.dispatchEvent(new Event("auth-changed"));
+  };
 
   const pages = isLoggedIn ? privatePages : publicPages;
 
@@ -153,7 +184,9 @@ export default function Navbar() {
           <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center', gap: 2 }}>
             {!isMobile && (
               isLoggedIn ? (
-                <Avatar sx={{ bgcolor: 'secondary.main', color: 'white' }}>U</Avatar>
+                <IconButton onClick={(e) => setAuthMenuAnchorEl(e.currentTarget)} sx={{ p: 0, border: '2px solid', borderColor: 'primary.main', borderRadius: '50%' }}>
+                  <Avatar sx={{ bgcolor: 'primary.main', color: 'white' }}>{userInitial}</Avatar>
+                </IconButton>
               ) : (
                 <Button 
                   variant="contained" 
@@ -178,7 +211,11 @@ export default function Navbar() {
             {/* Mobile Menu Icon */}
             {isMobile && (
               <>
-                {isLoggedIn && <Avatar sx={{ bgcolor: 'secondary.main', color: 'white', width: 32, height: 32 }}>U</Avatar>}
+                {isLoggedIn && (
+                  <IconButton onClick={(e) => setAuthMenuAnchorEl(e.currentTarget)} sx={{ p: 0, mr: 1, border: '2px solid', borderColor: 'primary.main', borderRadius: '50%' }}>
+                    <Avatar sx={{ bgcolor: 'primary.main', color: 'white', width: 32, height: 32 }}>{userInitial}</Avatar>
+                  </IconButton>
+                )}
                 <IconButton
                   size="large"
                   aria-label="menu"
@@ -203,6 +240,40 @@ export default function Navbar() {
       >
         {mobileMenu}
       </Drawer>
+
+      {/* Auth Avatar Menu */}
+      <Menu
+        anchorEl={authMenuAnchorEl}
+        open={Boolean(authMenuAnchorEl)}
+        onClose={() => setAuthMenuAnchorEl(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <MenuItem 
+          onClick={() => setAuthMenuAnchorEl(null)}
+          sx={{ '&:hover': { color: 'primary.main', backgroundColor: 'rgba(255, 255, 255, 0.05)' } }}
+        >
+          configurações de conta
+        </MenuItem>
+        <MenuItem 
+          onClick={() => setAuthMenuAnchorEl(null)}
+          sx={{ '&:hover': { color: 'primary.main', backgroundColor: 'rgba(255, 255, 255, 0.05)' } }}
+        >
+          mensagens recebidas
+        </MenuItem>
+        <MenuItem 
+          onClick={() => setAuthMenuAnchorEl(null)}
+          sx={{ '&:hover': { color: 'primary.main', backgroundColor: 'rgba(255, 255, 255, 0.05)' } }}
+        >
+          minhas publicações no mural e artigos
+        </MenuItem>
+        <MenuItem 
+          onClick={handleLogout} 
+          sx={{ color: 'error.main', '&:hover': { backgroundColor: 'rgba(244, 67, 54, 0.1)' } }}
+        >
+          deslogar
+        </MenuItem>
+      </Menu>
 
       {/* Desktop Login Modal */}
       <Popover

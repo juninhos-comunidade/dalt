@@ -26,6 +26,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import AuthForm from './AuthForm';
+import InboxModal from './inbox/InboxModal';
 
 // Real auth state is used inside the component
 
@@ -40,22 +41,15 @@ const publicPages = [
 const privatePages = [
   { name: 'Home', path: '/' },
   { name: 'Mural', path: '/mural' },
-  { name: 'Minhas Mentorias', path: '/minhas-mentorias' },
+  { name: 'Meus Eventos e Mentorias', path: '/painel' },
 ];
 
 export default function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [loginAnchorEl, setLoginAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [user, setUser] = useState<any>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const storedUser = window.localStorage.getItem("user");
-        if (storedUser) return JSON.parse(storedUser);
-      } catch (e) {}
-    }
-    return null;
-  });
+  const [user, setUser] = useState<any>(null);
   const [authMenuAnchorEl, setAuthMenuAnchorEl] = useState<HTMLElement | null>(null);
+  const [inboxOpen, setInboxOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const pathname = usePathname();
@@ -74,8 +68,20 @@ export default function Navbar() {
       }
     };
     checkAuth();
+
+    const handleOpenLogin = () => {
+      const btn = document.getElementById('navbar-login-btn');
+      if (btn) {
+        setLoginAnchorEl(btn as HTMLButtonElement);
+      }
+    };
+
     window.addEventListener("auth-changed", checkAuth);
-    return () => window.removeEventListener("auth-changed", checkAuth);
+    window.addEventListener("open-login", handleOpenLogin);
+    return () => {
+      window.removeEventListener("auth-changed", checkAuth);
+      window.removeEventListener("open-login", handleOpenLogin);
+    };
   }, []);
 
   const isLoggedIn = !!user;
@@ -197,6 +203,7 @@ export default function Navbar() {
                 </IconButton>
               ) : (
                 <Button 
+                  id="navbar-login-btn"
                   variant="contained" 
                   color="primary" 
                   onClick={(e) => setLoginAnchorEl(e.currentTarget)} 
@@ -264,7 +271,10 @@ export default function Navbar() {
           configurações de conta
         </MenuItem>
         <MenuItem 
-          onClick={() => setAuthMenuAnchorEl(null)}
+          onClick={() => {
+            setAuthMenuAnchorEl(null);
+            setInboxOpen(true);
+          }}
           sx={{ '&:hover': { color: 'primary.main', backgroundColor: 'rgba(255, 255, 255, 0.05)' } }}
         >
           mensagens recebidas
@@ -307,6 +317,8 @@ export default function Navbar() {
       >
         <AuthForm onClose={() => setLoginAnchorEl(null)} isMobile={false} />
       </Popover>
+
+      <InboxModal open={inboxOpen} onClose={() => setInboxOpen(false)} />
     </AppBar>
   );
 }

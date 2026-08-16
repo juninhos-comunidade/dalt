@@ -33,52 +33,52 @@ Criar as features principais da plataforma com sequência estrita de implementa�
 
 ### 2. Criar roles e validação de permissões
 
-- [ ] Definir roles `MASTER`, `MENTOR`, `APRENDIZ` no seed inicial.
+- [ ] Definir roles `MASTER`, `MENTOR`, `APRENDIZ` no seed inicial. (Nota: `MASTER` nunca será criado via endpoint).
   - Testes:
     - [ ] roles existem após seed
-    - [ ] criação de usuário atribui role correta
+    - [ ] criação de usuário atribui role correta (`APRENDIZ` por padrão)
 - [ ] Implementar guardas de autorização por role.
   - Testes:
-    - [ ] `APRENDIZ` não consegue criar conteúdo
+    - [ ] `APRENDIZ` não consegue criar conteúdo (Artigos, Desafios, Eventos, Mentorias)
     - [ ] `MENTOR` consegue criar conteúdo, mas não aprovar
     - [ ] `MASTER` consegue aprovar conteúdo
-- [ ] Validar que apenas `MASTER` e `MENTOR` podem acessar endpoints de criação.
+- [ ] Validar que apenas `MASTER` e `MENTOR` podem acessar endpoints de criação de conteúdo.
   - Testes:
     - [ ] acesso de `APRENDIZ` é negado
     - [ ] `MENTOR` e `MASTER` recebem 200 em criação válida
 
-### 3. Implementar criação e aprovação de artigos
+### 3. Implementar criação e aprovação de artigos e eventos
 
-- [ ] Criar modelo e endpoint de criação de artigo.
+- [ ] Criar modelo e endpoint de criação de artigo e evento.
   - Testes:
-    - [ ] `MASTER` cria artigo aprovado automaticamente
-    - [ ] `MENTOR` cria artigo com status `PENDING`
+    - [ ] `MASTER` cria artigo/evento aprovado automaticamente
+    - [ ] `MENTOR` cria artigo/evento com status `PENDING`
     - [ ] dados inválidos são rejeitados
-- [ ] Criar endpoint de listagem de artigos aprovados.
+- [ ] Criar endpoint de listagem de artigos e eventos aprovados.
   - Testes:
-    - [ ] apenas artigos `APPROVED` aparecem para `APRENDIZ`
-    - [ ] `MASTER` vê todos os artigos com status
-- [ ] Implementar endpoint de aprovação de artigo.
+    - [ ] apenas itens `APPROVED` aparecem para `APRENDIZ`
+    - [ ] `MASTER` vê todos os itens com status
+- [ ] Implementar endpoint de aprovação de artigo/evento.
   - Testes:
-    - [ ] `MASTER` aprova artigo pendente
+    - [ ] `MASTER` aprova item pendente
     - [ ] `MENTOR` não consegue aprovar
     - [ ] aprovação atualiza `approvedAt` e `approvedBy`
 
-### 4. Implementar criação e aprovação de desafios
+### 4. Implementar criação e aprovação de desafios e ofertas de mentoria
 
-- [ ] Criar modelo e endpoint de criação de desafio.
+- [ ] Criar modelo e endpoint de criação de desafio e oferta de mentoria.
   - Testes:
-    - [ ] `MASTER` cria desafio aprovado automaticamente
-    - [ ] `MENTOR` cria desafio em `PENDING`
+    - [ ] `MASTER` cria desafio/mentoria aprovado automaticamente
+    - [ ] `MENTOR` cria desafio/mentoria em `PENDING`
     - [ ] validação de campos funciona corretamente
-- [ ] Criar endpoint de listagem de desafios aprovados.
+- [ ] Criar endpoint de listagem de desafios e mentorias aprovadas.
   - Testes:
-    - [ ] `APRENDIZ` vê apenas desafios aprovados
-    - [ ] lista retorna área e nível corretamente
-- [ ] Implementar endpoint de aprovação de desafio.
+    - [ ] `APRENDIZ` vê apenas itens aprovados
+    - [ ] lista retorna áreas/níveis/assuntos corretamente
+- [ ] Implementar endpoint de aprovação de desafio/mentoria.
   - Testes:
-    - [ ] `MASTER` aprova desafio pendente
-    - [ ] `MENTOR` não consegue aprovar desafio
+    - [ ] `MASTER` aprova item pendente
+    - [ ] `MENTOR` não consegue aprovar
     - [ ] aprovação atualiza metadata de revisão
 
 ### 5. Registrar histórico de evolução do usuário

@@ -104,8 +104,11 @@ export default function AuthForm({ isMobile = false, onClose }: AuthFormProps) {
               localStorage.setItem("user", JSON.stringify(json.data.user));
             }
             window.dispatchEvent(new Event("auth-changed"));
-            if (onClose) onClose();
-            router.push("/");
+            if (onClose) {
+              onClose();
+            } else {
+              router.push("/");
+            }
           } else {
             setFormError(translateError(json.error));
           }
@@ -139,8 +142,11 @@ export default function AuthForm({ isMobile = false, onClose }: AuthFormProps) {
                       localStorage.setItem("user", JSON.stringify(ljson.data.user));
                     }
                     window.dispatchEvent(new Event("auth-changed"));
-                    if (onClose) onClose();
-                    router.push("/");
+                    if (onClose) {
+                      onClose();
+                    } else {
+                      router.push("/");
+                    }
                   } else {
                     setFormSuccess("Cadastro realizado com sucesso! Faça login para continuar.");
                     setMode("login");
